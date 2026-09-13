@@ -62,5 +62,24 @@ open DuoidalCategory
 -- Underlying structure of duoidal cats
 class DuoidalCategoryStruct (C : Type u) [Category.{v} C] (M : TwoMonoidalStructures C) where
   distributor : ∀ W X Y Z : C, (W ≺[M] X) ⊗[M] (Y ≺[M] Z) ⟶ (W ⊗[M] Y) ≺[M] (X ⊗[M] Z)
+  tensorUnitcomult : 𝟙⊗[M] ⟶ 𝟙⊗[M] ≺[M] 𝟙⊗[M]
+  seqUnitmult : 𝟙≺[M] ⊗[M] 𝟙≺[M] ⟶ 𝟙≺[M]
+  tensorUnitseq : 𝟙⊗[M] ⟶ 𝟙≺[M]
+
+namespace DuoidalCategory
+
+scoped notation "δ[" M "]" =>
+  DuoidalCategoryStruct.distributor (M := M)
+
+scoped notation "γ[" M "]" =>
+  DuoidalCategoryStruct.tensorUnitcomult (M := M)
+
+scoped notation "μ[" M "]" =>
+  DuoidalCategoryStruct.seqUnitmult (M := M)
+
+scoped notation "ν[" M "]" =>
+  DuoidalCategoryStruct.tensorUnitseq (M := M)
+
+end DuoidalCategory
 
 end CategoryTheory
