@@ -1,4 +1,6 @@
 import Mathlib.CategoryTheory.Monoidal.Category
+import Mathlib.CategoryTheory.Monoidal.Mon
+import Mathlib.CategoryTheory.Monoidal.Comon_
 import TwoMonoidal.Basic
 
 set_option linter.style.header false
@@ -106,10 +108,65 @@ class DuoidalCategory (C : Type u) [Category.{v} C] (M : TwoMonoidalStructures C
   muleftUnit :
     (ν[M] ▷⊗[M] 𝟙≺[M]) ≫ μ[M] = (λ⊗[M] 𝟙≺[M]).hom
   gammaCoassociativity :
-    γ[M] ≫ (γ[M] ▷≺[M] 𝟙⊗[M]) ≫ (α≺[M] 𝟙⊗[M] 𝟙⊗[M] 𝟙⊗[M]).hom = γ[M] ≫ (𝟙⊗[M] ◁≺[M] γ[M])
+    γ[M] ≫ (𝟙⊗[M] ◁≺[M] γ[M]) = γ[M] ≫ (γ[M] ▷≺[M] 𝟙⊗[M]) ≫ (α≺[M] 𝟙⊗[M] 𝟙⊗[M] 𝟙⊗[M]).hom
   gammarightCounit :
     γ[M] ≫ (𝟙⊗[M] ◁≺[M] ν[M]) = (ρ≺[M] 𝟙⊗[M]).inv
   gammaleftCounit :
     γ[M] ≫ (ν[M] ▷≺[M] 𝟙⊗[M]) = (λ≺[M] 𝟙⊗[M]).inv
+
+
+
+variable {C : Type u} [Category.{v} C]
+variable {M : TwoMonoidalStructures C}
+
+def seqUnitMonObj
+    [D : DuoidalCategory C M] :
+    @MonObj C _ M.tensor₁ (𝟙≺[M]) := by
+  letI : MonoidalCategory C := M.tensor₁
+  exact
+    { one := ν[M]
+      mul := μ[M]
+      one_mul := D.muleftUnit
+      mul_one := D.murightUnit
+      mul_assoc := D.muAssociativity }
+
+def tensorUnitComonObj
+    [D : DuoidalCategory C M] :
+    @ComonObj C _ M.tensor₂ (𝟙⊗[M]) := by
+  letI : MonoidalCategory C := M.tensor₂
+  exact
+    { counit := ν[M]
+      comul := γ[M]
+      counit_comul := D.gammaleftCounit
+      comul_counit := D.gammarightCounit
+      comul_assoc := D.gammaCoassociativity }
+
+@[simp]
+theorem seqUnitMonObj_one
+    [DuoidalCategory C M] :
+    @MonObj.one C _ M.tensor₁ (𝟙≺[M]) (seqUnitMonObj) =
+      ν[M] :=
+  rfl
+
+@[simp]
+theorem seqUnitMonObj_mul
+    [DuoidalCategory C M] :
+    @MonObj.mul C _ M.tensor₁ (𝟙≺[M]) (seqUnitMonObj) =
+      μ[M] :=
+  rfl
+
+@[simp]
+theorem tensorUnitMonObj_one
+    [DuoidalCategory C M] :
+    @ComonObj.counit C _ M.tensor₂ (𝟙⊗[M]) (tensorUnitComonObj) =
+      ν[M] :=
+  rfl
+
+@[simp]
+theorem tensorUnitMonObj_mul
+    [DuoidalCategory C M] :
+    @ComonObj.comul C _ M.tensor₂ (𝟙⊗[M]) (tensorUnitComonObj) =
+      γ[M] :=
+  rfl
 
 end CategoryTheory
