@@ -13,16 +13,16 @@ scoped notation:70 X:71 " ⊗[" M "] " Y:71 =>
 scoped notation:70 X:71 " ≺[" M "] " Y:71 =>
   TwoMonoidalStructures.tensorObj₂ M X Y
 
-scoped notation:71 " 𝟙⊗[" M "] " =>
+scoped notation:max " 𝟙⊗[" M "] " =>
   TwoMonoidalStructures.tensorUnit₁ M
 
-scoped notation:71 " 𝟙≺[" M "] " =>
+scoped notation:max " 𝟙≺[" M "] " =>
   TwoMonoidalStructures.tensorUnit₂ M
 
-scoped notation:70 f " ⊗ₘ[" M "] " g =>
+scoped notation:70 f:71 " ⊗ₘ[" M "] " g:71 =>
   TwoMonoidalStructures.tensorHom₁ M f g
 
-scoped notation:70 f " ≺ₘ[" M "] " g =>
+scoped notation:70 f:71 " ≺ₘ[" M "] " g:71 =>
   TwoMonoidalStructures.tensorHom₂ M f g
 
 scoped notation "α⊗[" M "]" =>
@@ -31,16 +31,16 @@ scoped notation "α⊗[" M "]" =>
 scoped notation "α≺[" M "]" =>
   TwoMonoidalStructures.tensorAssociator₂ M
 
-scoped notation X "◁⊗[" M "]" f =>
+scoped notation:70 X:71 "◁⊗[" M "]" f:71 =>
   TwoMonoidalStructures.tensorwhiskerLeft₁ M X f
 
-scoped notation f "▷⊗[" M "]" Y =>
+scoped notation:70 f:71 "▷⊗[" M "]" Y:71 =>
   TwoMonoidalStructures.tensorwhiskerRight₁ M Y f
 
-scoped notation X "◁≺[" M "]" f =>
+scoped notation:70 X:71 "◁≺[" M "]" f:71 =>
   TwoMonoidalStructures.tensorwhiskerLeft₂ M X f
 
-scoped notation f "▷≺[" M "]" Y =>
+scoped notation:70 f:71 "▷≺[" M "]" Y:71 =>
   TwoMonoidalStructures.tensorwhiskerRight₂ M Y f
 
 scoped notation "ρ⊗[" M "]" =>
@@ -81,5 +81,35 @@ scoped notation "ν[" M "]" =>
   DuoidalCategoryStruct.tensorUnitseq (M := M)
 
 end DuoidalCategory
+
+class DuoidalCategory (C : Type u) [Category.{v} C] (M : TwoMonoidalStructures C) extends DuoidalCategoryStruct C M where
+-- Naturality
+  Dist_naturality :
+    ∀ {X₁ X₂ X₃ X₄ Y₁ Y₂ Y₃ Y₄ : C} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (f₃ : X₃ ⟶ Y₃) (f₄ : X₄ ⟶ Y₄),
+      ((f₁ ≺ₘ[M] f₂) ⊗ₘ[M] (f₃ ≺ₘ[M] f₄)) ≫ δ[M] Y₁ Y₂ Y₃ Y₄ = δ[M] X₁ X₂ X₃ X₄ ≫ ((f₁ ⊗ₘ[M] f₃) ≺ₘ[M] (f₂ ⊗ₘ[M] f₄))
+  tensorAssociatorHexagon :
+    ∀ U V W X Y Z : C, ((δ[M] U V W X) ▷⊗[M] (Y ≺[M] Z)) ≫ δ[M] (U ⊗[M] W) (V ⊗[M] X) Y Z ≫ ((α⊗[M] U W Y).hom ≺ₘ[M] (α⊗[M] V X Z).hom) = (α⊗[M] (U ≺[M] V) (W ≺[M] X) (Y ≺[M] Z)).hom ≫ ((U ≺[M] V) ◁⊗[M] (δ[M] W X Y Z)) ≫ (δ[M] U V (W ⊗[M] Y) (X ⊗[M] Z))
+  seqAssociatorHexagon :
+    ∀ U V W X Y Z : C, δ[M] (U ≺[M] V) W (X ≺[M] Y) Z ≫ ((δ[M] U V X Y) ▷≺[M] (W ⊗[M] Z)) ≫ (α≺[M] (U ⊗[M] X) (V ⊗[M] Y) (W ⊗[M] Z)).hom = ((α≺[M] U V W).hom ⊗ₘ[M] (α≺[M] X Y Z).hom) ≫ (δ[M] U (V ≺[M] W) X (Y ≺[M] Z)) ≫ ((U ⊗[M] X) ◁≺[M] δ[M] V W Y Z)
+  tensorleftUnitorSquare :
+    ∀ X Y : C, (γ[M] ▷⊗[M] (X ≺[M] Y)) ≫ (δ[M] 𝟙⊗[M] 𝟙⊗[M] X Y) ≫ ((λ⊗[M] X).hom ≺ₘ[M] (λ⊗[M] Y).hom) = (λ⊗[M] (X ≺[M] Y)).hom
+  tensorrightUnitorSquare :
+    ∀ X Y : C, ((X ≺[M] Y) ◁⊗[M] γ[M]) ≫ (δ[M] X Y 𝟙⊗[M] 𝟙⊗[M]) ≫ ((ρ⊗[M] X).hom ≺ₘ[M] (ρ⊗[M] Y).hom) = (ρ⊗[M] (X ≺[M] Y)).hom
+  seqleftUnitorSquare :
+    ∀ X Y : C, δ[M] 𝟙≺[M] X 𝟙≺[M] Y ≫ (μ[M] ▷≺[M] (X ⊗[M] Y)) ≫ (λ≺[M] (X ⊗[M] Y)).hom = (λ≺[M] X).hom ⊗ₘ[M] (λ≺[M] Y).hom
+  seqrightUnitorSquare :
+    ∀ X Y : C, δ[M] X 𝟙≺[M] Y 𝟙≺[M] ≫ ((X ⊗[M] Y) ◁≺[M] μ[M]) ≫ (ρ≺[M] (X ⊗[M] Y)).hom = (ρ≺[M] X).hom ⊗ₘ[M] (ρ≺[M] Y).hom
+  muAssociativity :
+    (μ[M] ▷⊗[M] 𝟙≺[M]) ≫ μ[M] = (α⊗[M] 𝟙≺[M] 𝟙≺[M] 𝟙≺[M]).hom ≫ (𝟙≺[M] ◁⊗[M] μ[M]) ≫ μ[M]
+  murightUnit :
+    (𝟙≺[M] ◁⊗[M] ν[M]) ≫ μ[M] = (ρ⊗[M] 𝟙≺[M]).hom
+  muleftUnit :
+    (ν[M] ▷⊗[M] 𝟙≺[M]) ≫ μ[M] = (λ⊗[M] 𝟙≺[M]).hom
+  gammaCoassociativity :
+    γ[M] ≫ (γ[M] ▷≺[M] 𝟙⊗[M]) ≫ (α≺[M] 𝟙⊗[M] 𝟙⊗[M] 𝟙⊗[M]).hom = γ[M] ≫ (𝟙⊗[M] ◁≺[M] γ[M])
+  gammarightCounit :
+    γ[M] ≫ (𝟙⊗[M] ◁≺[M] ν[M]) = (ρ≺[M] 𝟙⊗[M]).inv
+  gammaleftCounit :
+    γ[M] ≫ (ν[M] ▷≺[M] 𝟙⊗[M]) = (λ≺[M] 𝟙⊗[M]).inv
 
 end CategoryTheory
