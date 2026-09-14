@@ -66,21 +66,49 @@ class DuoidalCategoryStruct (C : Type u) [Category.{v} C] (M : TwoMonoidalStruct
   distributor : ∀ W X Y Z : C, (W ≺[M] X) ⊗[M] (Y ≺[M] Z) ⟶ (W ⊗[M] Y) ≺[M] (X ⊗[M] Z)
   tensorUnitcomult : 𝟙⊗[M] ⟶ 𝟙⊗[M] ≺[M] 𝟙⊗[M]
   seqUnitmult : 𝟙≺[M] ⊗[M] 𝟙≺[M] ⟶ 𝟙≺[M]
-  tensorUnitseq : 𝟙⊗[M] ⟶ 𝟙≺[M]
+  unitcomparison : 𝟙⊗[M] ⟶ 𝟙≺[M]
 
 namespace DuoidalCategory
 
-scoped notation "δ[" M "]" =>
-  DuoidalCategoryStruct.distributor (M := M)
+-- scoped notation "δ[" M "]" =>
+--   DuoidalCategoryStruct.distributor (M := M)
 
-scoped notation "γ[" M "]" =>
-  DuoidalCategoryStruct.tensorUnitcomult (M := M)
+-- scoped notation "γ[" M "]" =>
+--   DuoidalCategoryStruct.tensorUnitcomult (M := M)
 
-scoped notation "μ[" M "]" =>
-  DuoidalCategoryStruct.seqUnitmult (M := M)
+-- scoped notation "μ[" M "]" =>
+--   DuoidalCategoryStruct.seqUnitmult (M := M)
 
-scoped notation "ν[" M "]" =>
-  DuoidalCategoryStruct.tensorUnitseq (M := M)
+-- scoped notation "ν[" M "]" =>
+--   DuoidalCategoryStruct.unitComparison (M := M)
+
+variable {C : Type u} [Category.{v} C]
+variable {M : TwoMonoidalStructures C}
+
+def Distributor
+    (M : TwoMonoidalStructures C)
+    [D : DuoidalCategoryStruct C M] :=
+  D.distributor
+
+def unitComparison
+    (M : TwoMonoidalStructures C)
+    [D : DuoidalCategoryStruct C M] :=
+  D.unitcomparison
+
+def tensorUnitComul
+    (M : TwoMonoidalStructures C)
+    [D : DuoidalCategoryStruct C M] :=
+  D.tensorUnitcomult
+
+def parUnitMul
+    (M : TwoMonoidalStructures C)
+    [D : DuoidalCategoryStruct C M] :=
+  D.seqUnitmult
+
+scoped notation:max "δ[" M "]" => Distributor M
+scoped notation:max "ν[" M "]" => unitComparison M
+scoped notation:max "γ[" M "]" => tensorUnitComul M
+scoped notation:max "μ[" M "]" => parUnitMul M
 
 end DuoidalCategory
 
@@ -119,6 +147,7 @@ class DuoidalCategory (C : Type u) [Category.{v} C] (M : TwoMonoidalStructures C
 variable {C : Type u} [Category.{v} C]
 variable {M : TwoMonoidalStructures C}
 
+-- (co)Unit objects are (co)monoids
 def seqUnitMonObj
     [D : DuoidalCategory C M] :
     @MonObj C _ M.tensor₁ (𝟙≺[M]) := by
@@ -168,5 +197,48 @@ theorem tensorUnitMonObj_mul
     @ComonObj.comul C _ M.tensor₂ (𝟙⊗[M]) (tensorUnitComonObj) =
       γ[M] :=
   rfl
+
+variable [DuoidalCategory C M]
+
+theorem nu_comon_hom :
+    ν[M] ≫ (ρ≺[M] 𝟙≺[M]).inv = γ[M] ≫ (ν[M] ≺ₘ[M] ν[M]) := by
+  have h : ν[M] ≫ (ρ≺[M] 𝟙≺[M]).inv = (ρ≺[M] 𝟙⊗[M]).inv ≫ (ν[M] ▷≺[M] 𝟙≺[M]) := by
+    let : MonoidalCategory C := M.tensor₂
+    exact MonoidalCategory.rightUnitor_inv_naturality ν[M]
+  rw [← gammarightCounit] at h
+  rw [Category.assoc] at h
+  let : MonoidalCategory C := M.tensor₂
+  rw [← MonoidalCategory.tensorHom_def' ν[M] ν[M]] at h
+  exact h
+
+theorem nu_mon_hom :
+    (ρ⊗[M] 𝟙⊗[M]).hom ≫ ν[M] = (ν[M] ⊗ₘ[M] ν[M]) ≫ μ[M] := by
+  have h : (ν[M] ▷⊗[M] 𝟙⊗[M]) ≫ (ρ⊗[M] 𝟙≺[M]).hom =(ρ⊗[M] 𝟙⊗[M]).hom ≫ ν[M] := by
+    let : MonoidalCategory C := M.tensor₁
+    exact MonoidalCategory.rightUnitor_naturality ν[M]
+  rw [← murightUnit] at h
+  symm at h
+  rw [← Category.assoc] at h
+  let : MonoidalCategory C := M.tensor₁
+  rw [← MonoidalCategory.tensorHom_def ν[M] ν[M]] at h
+  exact h
+
+theorem gamma_bialg :
+    (γ[M] ⊗ₘ[M] γ[M]) ≫ (δ[M] 𝟙⊗[M] 𝟙⊗[M] 𝟙⊗[M] 𝟙⊗[M]) ≫ ((λ⊗[M] 𝟙⊗[M]).hom ≺ₘ[M] (λ⊗[M] 𝟙⊗[M]).hom) = (λ⊗[M] 𝟙⊗[M]).hom ≫ γ[M] := by
+  dsimp only [TwoMonoidalStructures.tensorHom₁]
+  let : MonoidalCategory C := M.tensor₁
+  rw [MonoidalCategory.tensorHom_def' γ[M] γ[M]]
+  simp only [Category.assoc]
+  rw [tensorleftUnitorSquare (M := M) 𝟙⊗[M] 𝟙⊗[M]]
+  rw [MonoidalCategory.leftUnitor_naturality]
+
+theorem mu_bialg :
+    (δ[M] 𝟙≺[M] 𝟙≺[M] 𝟙≺[M] 𝟙≺[M]) ≫ (μ[M] ≺ₘ[M] μ[M]) ≫ (λ≺[M] 𝟙≺[M]).hom = ((λ≺[M] 𝟙≺[M]).hom ⊗ₘ[M] (λ≺[M] 𝟙≺[M]).hom) ≫ μ[M] := by
+  dsimp only [TwoMonoidalStructures.tensorHom₂]
+  let : MonoidalCategory C := M.tensor₂
+  rw [MonoidalCategory.tensorHom_def μ[M] μ[M]]
+  rw [Category.assoc]
+  rw [MonoidalCategory.leftUnitor_naturality]
+  simp only [seqleftUnitorSquare (M := M) 𝟙≺[M] 𝟙≺[M],← Category.assoc]
 
 end CategoryTheory
