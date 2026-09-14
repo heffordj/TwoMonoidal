@@ -21,13 +21,13 @@ namespace TwoMonoidalStructures
 variable {C : Type u} [Category.{v} C]
 
 -- Tensor₁ of objects
-def tensorObj₁
+abbrev tensorObj₁
     (M : TwoMonoidalStructures C) (X Y : C) : C :=
   letI : MonoidalCategory C := M.tensor₁
   X ⊗ Y
 
 -- Tensor₂ of objects
-def tensorObj₂
+abbrev tensorObj₂
     (M : TwoMonoidalStructures C) (X Y : C) : C :=
   letI : MonoidalCategory C := M.tensor₂
   X ⊗ Y
@@ -40,12 +40,12 @@ local notation:70 X:71 " ⊗₂[" M "] " Y:71 =>
   TwoMonoidalStructures.tensorObj₂ M X Y
 
 -- Tensor₁ unit
-def tensorUnit₁ (M : TwoMonoidalStructures C) : C :=
+abbrev tensorUnit₁ (M : TwoMonoidalStructures C) : C :=
   letI : MonoidalCategory C := M.tensor₁
   𝟙_ C
 
 -- Tensor₂ unit
-def tensorUnit₂ (M : TwoMonoidalStructures C) : C :=
+abbrev tensorUnit₂ (M : TwoMonoidalStructures C) : C :=
   letI : MonoidalCategory C := M.tensor₂
   𝟙_ C
 
@@ -57,7 +57,7 @@ local notation:71 " 𝟙⊗₂[" M "] " =>
   TwoMonoidalStructures.tensorUnit₂ M
 
 -- Tensor₁ of morphisms
-def tensorHom₁
+abbrev tensorHom₁
     (M : TwoMonoidalStructures C)
     {X₁ Y₁ X₂ Y₂ : C}
     (f : X₁ ⟶ Y₁) (g : X₂ ⟶ Y₂) :
@@ -66,7 +66,7 @@ def tensorHom₁
   exact f ⊗ₘ g
 
 -- Tensor₂ of morphisms
-def tensorHom₂
+abbrev tensorHom₂
     (M : TwoMonoidalStructures C)
     {X₁ Y₁ X₂ Y₂ : C}
     (f : X₁ ⟶ Y₁) (g : X₂ ⟶ Y₂) :
@@ -82,57 +82,57 @@ local notation:70 f " ⊗₂ₘ[" M "] " g =>
   TwoMonoidalStructures.tensorHom₂ M f g
 
 -- Helper functions for associators
-def tensorAssociator₁
+abbrev tensorAssociator₁
     (M : TwoMonoidalStructures C) (X Y Z : C) :
     (X ⊗₁[M] Y) ⊗₁[M] Z ≅ X ⊗₁[M] (Y ⊗₁[M] Z) := by
   letI : MonoidalCategory C := M.tensor₁
   exact α_ X Y Z
 
-def tensorAssociator₂
+abbrev tensorAssociator₂
     (M : TwoMonoidalStructures C) (X Y Z : C) :
     (X ⊗₂[M] Y) ⊗₂[M] Z ≅ X ⊗₂[M] (Y ⊗₂[M] Z) := by
   letI : MonoidalCategory C := M.tensor₂
   exact α_ X Y Z
 
 -- Helper functions for unitors
-def tensorrightUnitor₁
+abbrev tensorrightUnitor₁
     (M : TwoMonoidalStructures C) (X : C) :
     X ⊗₁[M] (𝟙⊗₁[M]) ≅ X := by
   letI : MonoidalCategory C := M.tensor₁
   exact ρ_ X
 
-def tensorleftUnitor₁
+abbrev tensorleftUnitor₁
     (M : TwoMonoidalStructures C) (X : C) :
     (𝟙⊗₁[M]) ⊗₁[M] X ≅ X := by
   letI : MonoidalCategory C := M.tensor₁
   exact λ_ X
 
-def tensorrightUnitor₂
+abbrev tensorrightUnitor₂
     (M : TwoMonoidalStructures C) (X : C) :
     X ⊗₂[M] (𝟙⊗₂[M]) ≅ X := by
   letI : MonoidalCategory C := M.tensor₂
   exact ρ_ X
 
-def tensorleftUnitor₂
+abbrev tensorleftUnitor₂
     (M : TwoMonoidalStructures C) (X : C) :
     (𝟙⊗₂[M]) ⊗₂[M] X ≅ X := by
   letI : MonoidalCategory C := M.tensor₂
   exact λ_ X
 
 -- Helper functions for whiskering
-def tensorwhiskerLeft₁ (M : TwoMonoidalStructures C) (X : C) {Y₁ Y₂ : C} (f : Y₁ ⟶ Y₂) : X ⊗₁[M] Y₁ ⟶ X ⊗₁[M] Y₂ := by
+abbrev tensorwhiskerLeft₁ (M : TwoMonoidalStructures C) (X : C) {Y₁ Y₂ : C} (f : Y₁ ⟶ Y₂) : X ⊗₁[M] Y₁ ⟶ X ⊗₁[M] Y₂ := by
   letI : MonoidalCategory C := M.tensor₁
   exact X ◁ f
 
-def tensorwhiskerRight₁ (M : TwoMonoidalStructures C) {X₁ X₂ : C} (Y : C) (f : X₁ ⟶ X₂) : X₁ ⊗₁[M] Y ⟶ X₂ ⊗₁[M] Y := by
+abbrev tensorwhiskerRight₁ (M : TwoMonoidalStructures C) {X₁ X₂ : C} (Y : C) (f : X₁ ⟶ X₂) : X₁ ⊗₁[M] Y ⟶ X₂ ⊗₁[M] Y := by
   letI : MonoidalCategory C := M.tensor₁
   exact f ▷ Y
 
-def tensorwhiskerLeft₂ (M : TwoMonoidalStructures C) (X : C) {Y₁ Y₂ : C} (f : Y₁ ⟶ Y₂) : X ⊗₂[M] Y₁ ⟶ X ⊗₂[M] Y₂ := by
+abbrev tensorwhiskerLeft₂ (M : TwoMonoidalStructures C) (X : C) {Y₁ Y₂ : C} (f : Y₁ ⟶ Y₂) : X ⊗₂[M] Y₁ ⟶ X ⊗₂[M] Y₂ := by
   letI : MonoidalCategory C := M.tensor₂
   exact X ◁ f
 
-def tensorwhiskerRight₂ (M : TwoMonoidalStructures C) {X₁ X₂ : C} (Y : C) (f : X₁ ⟶ X₂) : X₁ ⊗₂[M] Y ⟶ X₂ ⊗₂[M] Y := by
+abbrev tensorwhiskerRight₂ (M : TwoMonoidalStructures C) {X₁ X₂ : C} (Y : C) (f : X₁ ⟶ X₂) : X₁ ⊗₂[M] Y ⟶ X₂ ⊗₂[M] Y := by
   letI : MonoidalCategory C := M.tensor₂
   exact f ▷ Y
 
