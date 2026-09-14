@@ -1,13 +1,14 @@
-# two_monoidal
+# Two Monoidal
 
-## GitHub configuration
+A work-in-progress Lean implementation of categories with two monoidal structures.
 
-To set up your new GitHub repository, follow these steps:
+Done:
+* Underlying structure TwoMonoidalStructures to support two monoidal structures on one category.
+* Definitions of linearly distributive, mix and duoidal categories.
 
-* Under your repository name, click **Settings**.
-* In the **Actions** section of the sidebar, click "General".
-* Check the box **Allow GitHub Actions to create and approve pull requests**.
-* Click the **Pages** section of the settings sidebar.
-* In the **Source** dropdown menu, select "GitHub Actions".
-
-After following the steps above, you can remove this section from the README file.
+To come:
+* *-autonomous categories
+* Isomix categories and basic results about coherence
+* Normal duoidal categories
+* Coherence proofs
+* Maybe eventually: three monoidal structures and BV-categories
