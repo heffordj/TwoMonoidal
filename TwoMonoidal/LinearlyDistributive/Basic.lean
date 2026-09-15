@@ -66,11 +66,27 @@ class LinDistCategoryStruct (C : Type u) [Category.{v} C] (M : TwoMonoidalStruct
 
 namespace LinDistCategory
 
-scoped notation " δₗ[" M "]" =>
-  LinDistCategoryStruct.leftDistributor (M := M)
+-- scoped notation " δₗ[" M "]" =>
+--   LinDistCategoryStruct.leftDistributor (M := M)
 
-scoped notation " δᵣ[" M "]" =>
-  LinDistCategoryStruct.rightDistributor (M := M)
+-- scoped notation " δᵣ[" M "]" =>
+--   LinDistCategoryStruct.rightDistributor (M := M)
+
+variable {C : Type u} [Category.{v} C]
+variable {M : TwoMonoidalStructures C}
+
+def left_Distributor
+    (M : TwoMonoidalStructures C)
+    [D : LinDistCategoryStruct C M] :=
+  D.leftDistributor
+
+def right_Distributor
+    (M : TwoMonoidalStructures C)
+    [D : LinDistCategoryStruct C M] :=
+  D.rightDistributor
+
+scoped notation:max " δₗ[" M "]" => left_Distributor M
+scoped notation:max " δᵣ[" M "]" => right_Distributor M
 
 end LinDistCategory
 
