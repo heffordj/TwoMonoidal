@@ -21,22 +21,24 @@ scoped notation:max "sᵣ[" J "]" => tensor_inverse_pair.mul_right (J := J)
 
 variable (J : C)
 
-
+@[instance_reducible, simps]
 def shifted_tensor
   [tensor_inverse_pair J] :
-  @MonoidalCategory C _ := by
+  MonoidalCategory C := by
   exact
     {
       tensorObj X Y := X ⊗ (J^ ⊗ Y)
       whiskerLeft (X : C) {Y₁ Y₂ : C} (f : Y₁ ⟶ Y₂) := X ◁ (J^ ◁ f)
       whiskerRight {X₁ X₂ : C} (f : X₁ ⟶ X₂) (Y : C) := f ▷ (J^ ⊗ Y)
+      tensorHom {X₁ Y₁ X₂ Y₂} f g :=
+      (f ▷ (J^ ⊗ X₂)) ≫
+        (Y₁ ◁ (J^ ◁ g))
       tensorUnit := J
       associator X Y Z := (α_ X (J^ ⊗ Y) (J^ ⊗ Z)) ≪≫ (X ◁ᵢ (α_ J^ Y (J^ ⊗ Z)))
       leftUnitor X := (α_ J J^ X).symm ≪≫ (sₗ[J] ▷ᵢ X) ≪≫ λ_ X
       rightUnitor X := (X ◁ᵢ sᵣ[J]) ≪≫ ρ_ X
       tensorHom_comp_tensorHom := by
         intro X₁ Y₁ Z₁ X₂ Y₂ Z₂ f₁ f₂ g₁ g₂
-        dsimp
         simp only [Category.assoc]
         rw [whisker_exchange_assoc]
         monoidal
@@ -80,6 +82,120 @@ def shifted_tensor
         monoidal
     }
 
+open LinDistCategory
 
+abbrev shifted_tensor_TwoMonoidalStructure
+  [tensor_inverse_pair J] :
+  TwoMonoidalStructures C := by
+  exact
+    { tensor₁ := inferInstance
+      tensor₂ := shifted_tensor J
+    }
+
+-- @[simp]
+-- theorem shifted_tensorObj₁
+--   [tensor_inverse_pair J] (X Y : C) :
+--   X ⊗[shifted_tensor_TwoMonoidalStructure J] Y =
+--     X ⊗ Y := rfl
+
+-- @[reassoc (attr := simp)]
+-- theorem shifted_tensorHom₁
+--   [tensor_inverse_pair J]
+--   {X₁ Y₁ X₂ Y₂ : C}
+--   (f : X₁ ⟶ Y₁) (g : X₂ ⟶ Y₂) :
+--   f ⊗ₘ[shifted_tensor_TwoMonoidalStructure J] g =
+--     f ⊗ₘ g := rfl
+
+-- @[simp]
+-- theorem shifted_tensorObj₂
+--   [tensor_inverse_pair J] (X Y : C) :
+--   X ⅋[shifted_tensor_TwoMonoidalStructure J] Y =
+--     X ⊗ (J^ ⊗ Y) := rfl
+
+-- @[reassoc (attr := simp)]
+-- theorem shifted_tensorHom₂
+--   [tensor_inverse_pair J]
+--   {X₁ Y₁ X₂ Y₂ : C}
+--   (f : X₁ ⟶ Y₁) (g : X₂ ⟶ Y₂) :
+--   f ⅋ₘ[shifted_tensor_TwoMonoidalStructure J] g =
+--     (f ▷ (J^ ⊗ X₂)) ≫ Y₁ ◁ (J^ ◁ g) := rfl
+
+-- @[reassoc (attr := simp)]
+-- theorem shifted_tensorAssoc₁
+--   [tensor_inverse_pair J] (X Y Z : C) :
+--   α⊗[shifted_tensor_TwoMonoidalStructure J] X Y Z = α_ X Y Z := rfl
+
+-- @[reassoc (attr := simp)]
+-- theorem shifted_tensorAssoc₂
+--   [tensor_inverse_pair J] (X Y Z : C) :
+--   α⅋[shifted_tensor_TwoMonoidalStructure J] X Y Z = (shifted_tensor J).associator X Y Z := rfl
+
+-- @[reassoc (attr := simp)]
+-- theorem shifted_tensorWhiskerleft₁
+--   [tensor_inverse_pair J] (X : C) {Y₁ Y₂ : C} (f : Y₁ ⟶ Y₂) :
+--   X ◁⊗[shifted_tensor_TwoMonoidalStructure J] f = X ◁ f := rfl
+
+-- @[reassoc (attr := simp)]
+-- theorem shifted_tensorWhiskerleft₂
+--   [tensor_inverse_pair J] (X : C) {Y₁ Y₂ : C} (f : Y₁ ⟶ Y₂) :
+--   X ◁⅋[shifted_tensor_TwoMonoidalStructure J] f =  X ◁ (J^ ◁ f) := rfl
+
+-- @[reassoc (attr := simp)]
+-- theorem shifted_tensorWhiskerright₁
+--   [tensor_inverse_pair J] {X₁ X₂ : C} (Y : C) (f : X₁ ⟶ X₂) :
+--   f ▷⊗[shifted_tensor_TwoMonoidalStructure J] Y = f ▷ Y := rfl
+
+-- @[reassoc (attr := simp)]
+-- theorem shifted_tensorWhiskerright₂
+--   [tensor_inverse_pair J] {X₁ X₂ : C} (Y : C) (f : X₁ ⟶ X₂) :
+--   f ▷⅋[shifted_tensor_TwoMonoidalStructure J] Y =  f ▷ (J^ ⊗ Y) := rfl
+
+def shifted_tensor_lin_distributive_category
+  [tensor_inverse_pair J] :
+  LinDistCategory C (shifted_tensor_TwoMonoidalStructure J) := by
+  exact {
+    leftDistributor X Y Z := (α_ X Y (J^ ⊗ Z)).inv
+    rightDistributor X Y Z := (α_ X (J^ ⊗ Y) Z).hom ≫ X ◁ (α_ J^ Y Z).hom
+    leftDist_naturality := by
+      intro X₁ X₂ X₃ Y₁ Y₂ Y₃ f₁ f₂ f₃
+      simp [left_Distributor, tensorHom_def]
+    rightDist_naturality := by
+      intro X₁ X₂ X₃ Y₁ Y₂ Y₃ f₁ f₂ f₃
+      simp [right_Distributor,tensorHom_def]
+    pentagon1 := by
+      intro W X Y Z
+      simp [left_Distributor]
+    pentagon2 := by
+      intro W X Y Z
+      simp [left_Distributor]
+      monoidal
+    pentagon3 := by
+      intro W X Y Z
+      simp [right_Distributor]
+      monoidal
+    pentagon4 := by
+      intro W X Y Z
+      simp [right_Distributor]
+      monoidal
+    triangle1 := by
+      intro X Y
+      simp [left_Distributor]
+    triangle2 := by
+      intro X Y
+      simp [right_Distributor]
+    triangle3 := by
+      intro X Y
+      simp [right_Distributor]
+    triangle4 := by
+      intro X Y
+      simp [left_Distributor]
+    pentagon5 := by
+      intro W X Y Z
+      simp [left_Distributor,right_Distributor]
+      monoidal
+    pentagon6 := by
+      intro W X Y Z
+      simp [left_Distributor,right_Distributor]
+  }
 
 end CategoryTheory

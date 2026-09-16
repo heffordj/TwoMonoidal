@@ -19,10 +19,10 @@ scoped notation:71 " 𝟙⊗[" M "] " =>
 scoped notation:71 " 𝟙⅋[" M "] " =>
   TwoMonoidalStructures.tensorUnit₂ M
 
-scoped notation:70 f " ⊗ₘ[" M "] " g =>
+scoped notation:70 f:71 " ⊗ₘ[" M "] " g:70 =>
   TwoMonoidalStructures.tensorHom₁ M f g
 
-scoped notation:70 f " ⅋ₘ[" M "] " g =>
+scoped notation:70 f:71 " ⅋ₘ[" M "] " g:70 =>
   TwoMonoidalStructures.tensorHom₂ M f g
 
 scoped notation "α⊗[" M "]" =>
@@ -31,16 +31,16 @@ scoped notation "α⊗[" M "]" =>
 scoped notation "α⅋[" M "]" =>
   TwoMonoidalStructures.tensorAssociator₂ M
 
-scoped notation X "◁⊗[" M "]" f =>
+scoped notation:81 X:71 "◁⊗[" M "]" f:70 =>
   TwoMonoidalStructures.tensorwhiskerLeft₁ M X f
 
-scoped notation f "▷⊗[" M "]" Y =>
+scoped notation:81 f:71 "▷⊗[" M "]" Y:70 =>
   TwoMonoidalStructures.tensorwhiskerRight₁ M Y f
 
-scoped notation X "◁⅋[" M "]" f =>
+scoped notation:81 X:71 "◁⅋[" M "]" f:70 =>
   TwoMonoidalStructures.tensorwhiskerLeft₂ M X f
 
-scoped notation f "▷⅋[" M "]" Y =>
+scoped notation:81 f:71 "▷⅋[" M "]" Y:70 =>
   TwoMonoidalStructures.tensorwhiskerRight₂ M Y f
 
 scoped notation "ρ⊗[" M "]" =>
@@ -94,33 +94,46 @@ class LinDistCategory (C : Type u) [Category.{v} C] (M : TwoMonoidalStructures C
   -- Naturality
   leftDist_naturality :
     ∀ {X₁ X₂ X₃ Y₁ Y₂ Y₃ : C} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (f₃ : X₃ ⟶ Y₃),
-      (f₁ ⊗ₘ[M] (f₂ ⅋ₘ[M] f₃)) ≫ δₗ[M] Y₁ Y₂ Y₃ = δₗ[M] X₁ X₂ X₃ ≫ ((f₁ ⊗ₘ[M] f₂) ⅋ₘ[M] f₃)
+      (f₁ ⊗ₘ[M] (f₂ ⅋ₘ[M] f₃)) ≫ δₗ[M] Y₁ Y₂ Y₃ = δₗ[M] X₁ X₂ X₃ ≫ ((f₁ ⊗ₘ[M] f₂) ⅋ₘ[M] f₃) := by cat_disch
   rightDist_naturality :
     ∀ {X₁ X₂ X₃ Y₁ Y₂ Y₃ : C} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (f₃ : X₃ ⟶ Y₃),
-      ((f₁ ⅋ₘ[M] f₂) ⊗ₘ[M] f₃) ≫ δᵣ[M] Y₁ Y₂ Y₃ = δᵣ[M] X₁ X₂ X₃ ≫ (f₁ ⅋ₘ[M] (f₂ ⊗ₘ[M] f₃))
+      ((f₁ ⅋ₘ[M] f₂) ⊗ₘ[M] f₃) ≫ δᵣ[M] Y₁ Y₂ Y₃ = δᵣ[M] X₁ X₂ X₃ ≫ (f₁ ⅋ₘ[M] (f₂ ⊗ₘ[M] f₃)) := by cat_disch
   -- Distributors and associativity
   pentagon1 :
-    ∀ W X Y Z : C, (α⊗[M] W X (Y ⅋[M] Z)).hom ≫ (W ◁⊗[M] (δₗ[M] X Y Z)) ≫ δₗ[M] W (X ⊗[M] Y) Z = δₗ[M] (W ⊗[M] X) Y Z ≫ ((α⊗[M] W X Y).hom ▷⅋[M] Z)
+    ∀ W X Y Z : C, (α⊗[M] W X (Y ⅋[M] Z)).hom ≫ (W ◁⊗[M] (δₗ[M] X Y Z)) ≫ δₗ[M] W (X ⊗[M] Y) Z = δₗ[M] (W ⊗[M] X) Y Z ≫ ((α⊗[M] W X Y).hom ▷⅋[M] Z) := by cat_disch
   pentagon2 :
-    ∀ W X Y Z : C, (W ◁⊗[M] (α⅋[M] X Y Z).hom) ≫ δₗ[M] W X (Y ⅋[M] Z) = δₗ[M] W (X ⅋[M] Y) Z ≫ ((δₗ[M] W X Y) ▷⅋[M] Z) ≫ (α⅋[M] (W ⊗[M] X) Y Z).hom
+    ∀ W X Y Z : C, (W ◁⊗[M] (α⅋[M] X Y Z).hom) ≫ δₗ[M] W X (Y ⅋[M] Z) = δₗ[M] W (X ⅋[M] Y) Z ≫ ((δₗ[M] W X Y) ▷⅋[M] Z) ≫ (α⅋[M] (W ⊗[M] X) Y Z).hom := by cat_disch
   pentagon3 :
-    ∀ W X Y Z : C, (α⊗[M] (W ⅋[M] X) Y Z).hom ≫ δᵣ[M] W X (Y ⊗[M] Z) = ((δᵣ[M] W X Y) ▷⊗[M] Z) ≫ δᵣ[M] W (X ⊗[M] Y) Z ≫ (W ◁⅋[M] (α⊗[M] X Y Z).hom)
+    ∀ W X Y Z : C, (α⊗[M] (W ⅋[M] X) Y Z).hom ≫ δᵣ[M] W X (Y ⊗[M] Z) = ((δᵣ[M] W X Y) ▷⊗[M] Z) ≫ δᵣ[M] W (X ⊗[M] Y) Z ≫ (W ◁⅋[M] (α⊗[M] X Y Z).hom) := by cat_disch
   pentagon4 :
-    ∀ W X Y Z : C, (δᵣ[M] (W ⅋[M] X) Y Z) ≫ (α⅋[M] W X (Y ⊗[M] Z)).hom = ((α⅋[M] W X Y).hom ▷⊗[M] Z) ≫ (δᵣ[M] W (X ⅋[M] Y) Z) ≫ (W ◁⅋[M] (δᵣ[M] X Y Z))
+    ∀ W X Y Z : C, (δᵣ[M] (W ⅋[M] X) Y Z) ≫ (α⅋[M] W X (Y ⊗[M] Z)).hom = ((α⅋[M] W X Y).hom ▷⊗[M] Z) ≫ (δᵣ[M] W (X ⅋[M] Y) Z) ≫ (W ◁⅋[M] (δᵣ[M] X Y Z)) := by cat_disch
   -- Distributors and units
   triangle1 :
-    ∀ X Y : C, (λ⊗[M] (X ⅋[M] Y)).hom = (δₗ[M] (𝟙⊗[M]) X Y) ≫ ((λ⊗[M] X).hom ▷⅋[M] Y)
+    ∀ X Y : C, (λ⊗[M] (X ⅋[M] Y)).hom = (δₗ[M] (𝟙⊗[M]) X Y) ≫ ((λ⊗[M] X).hom ▷⅋[M] Y) := by cat_disch
   triangle2 :
-    ∀ X Y : C, (ρ⊗[M] (X ⅋[M] Y)).hom = (δᵣ[M] X Y (𝟙⊗[M])) ≫ X ◁⅋[M] ((ρ⊗[M] Y).hom)
+    ∀ X Y : C, (ρ⊗[M] (X ⅋[M] Y)).hom = (δᵣ[M] X Y (𝟙⊗[M])) ≫ X ◁⅋[M] ((ρ⊗[M] Y).hom) := by cat_disch
   triangle3:
-    ∀ X Y : C, ((λ⅋[M] X).hom ▷⊗[M] Y) = (δᵣ[M] (𝟙⅋[M]) X Y) ≫ (λ⅋[M] (X ⊗[M] Y)).hom
+    ∀ X Y : C, ((λ⅋[M] X).hom ▷⊗[M] Y) = (δᵣ[M] (𝟙⅋[M]) X Y) ≫ (λ⅋[M] (X ⊗[M] Y)).hom := by cat_disch
   triangle4:
-    ∀ X Y : C, (X ◁⊗[M] (ρ⅋[M] Y).hom) = (δₗ[M] X Y (𝟙⅋[M])) ≫ (ρ⅋[M] (X ⊗[M] Y)).hom
+    ∀ X Y : C, (X ◁⊗[M] (ρ⅋[M] Y).hom) = (δₗ[M] X Y (𝟙⅋[M])) ≫ (ρ⅋[M] (X ⊗[M] Y)).hom := by cat_disch
   -- Distributors and distributors
   pentagon5 :
-    ∀ W X Y Z : C, δₗ[M] (W ⅋[M] X) Y Z ≫ ((δᵣ[M] W X Y) ▷⅋[M] Z) ≫ (α⅋[M] W (X ⊗[M] Y) Z).hom = δᵣ[M] W X (Y ⅋[M] Z) ≫ (W ◁⅋[M] δₗ[M] X Y Z)
+    ∀ W X Y Z : C, δₗ[M] (W ⅋[M] X) Y Z ≫ ((δᵣ[M] W X Y) ▷⅋[M] Z) ≫ (α⅋[M] W (X ⊗[M] Y) Z).hom = δᵣ[M] W X (Y ⅋[M] Z) ≫ (W ◁⅋[M] δₗ[M] X Y Z) := by cat_disch
   pentagon6 :
-    ∀ W X Y Z : C, (α⊗[M] W (X ⅋[M] Y) Z).hom ≫ (W ◁⊗[M] δᵣ[M] X Y Z) ≫ δₗ[M] W X (Y ⊗[M] Z) = (δₗ[M] W X Y ▷⊗[M] Z) ≫ δᵣ[M] (W ⊗[M] X) Y Z
+    ∀ W X Y Z : C, (α⊗[M] W (X ⅋[M] Y) Z).hom ≫ (W ◁⊗[M] δᵣ[M] X Y Z) ≫ δₗ[M] W X (Y ⊗[M] Z) = (δₗ[M] W X Y ▷⊗[M] Z) ≫ δᵣ[M] (W ⊗[M] X) Y Z := by cat_disch
+
+attribute [reassoc] LinDistCategory.leftDist_naturality
+attribute [reassoc] LinDistCategory.rightDist_naturality
+attribute [reassoc (attr := simp)] LinDistCategory.pentagon1
+attribute [reassoc (attr := simp)] LinDistCategory.pentagon2
+attribute [reassoc (attr := simp)] LinDistCategory.pentagon3
+attribute [reassoc (attr := simp)] LinDistCategory.pentagon4
+attribute [reassoc (attr := simp)] LinDistCategory.pentagon5
+attribute [reassoc (attr := simp)] LinDistCategory.pentagon6
+attribute [reassoc (attr := simp)] LinDistCategory.triangle1
+attribute [reassoc (attr := simp)] LinDistCategory.triangle2
+attribute [reassoc (attr := simp)] LinDistCategory.triangle3
+attribute [reassoc (attr := simp)] LinDistCategory.triangle4
 
 
 class MixCategory (C : Type u) [Category.{v} C] (M : TwoMonoidalStructures C) extends LinDistCategory C M where
