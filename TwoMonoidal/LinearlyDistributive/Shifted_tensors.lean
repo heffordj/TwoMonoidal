@@ -198,4 +198,27 @@ def shifted_tensor_lin_distributive_category
       simp [left_Distributor,right_Distributor]
   }
 
+class LinDistCategory_Iso (C : Type u) [Category.{v} C] (M : TwoMonoidalStructures C) extends LinDistCategory C M where
+  leftDistributor_iso (X Y Z : C) : IsIso (leftDistributor X Y Z)
+  rightDistributor_iso (X Y Z : C) : IsIso (rightDistributor X Y Z)
+
+def shifted_tensor_lin_distributive_category_Iso
+  [tensor_inverse_pair J] :
+  LinDistCategory_Iso C (shifted_tensor_TwoMonoidalStructure J) := by
+  exact {
+    toLinDistCategory := shifted_tensor_lin_distributive_category J
+    leftDistributor_iso := by
+      intro X Y Z
+      unfold LinDistCategoryStruct.leftDistributor
+      unfold shifted_tensor_lin_distributive_category
+      simp only [shifted_tensor_tensorObj]
+      infer_instance
+    rightDistributor_iso := by
+      intro X Y Z
+      unfold LinDistCategoryStruct.rightDistributor
+      unfold shifted_tensor_lin_distributive_category
+      simp only [shifted_tensor_tensorObj, isIso_comp_left_iff]
+      infer_instance
+  }
+
 end CategoryTheory
