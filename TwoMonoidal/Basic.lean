@@ -136,6 +136,22 @@ abbrev tensorwhiskerRight₂ (M : TwoMonoidalStructures C) {X₁ X₂ : C} (Y : 
   letI : MonoidalCategory C := M.tensor₂
   exact f ▷ Y
 
+abbrev tensorwhiskerLeftIso₁ (M : TwoMonoidalStructures C) (X : C) {Y₁ Y₂ : C} (f : Y₁ ≅ Y₂) : X ⊗₁[M] Y₁ ≅ X ⊗₁[M] Y₂ := by
+  letI : MonoidalCategory C := M.tensor₁
+  exact X ◁ᵢ f
+
+abbrev tensorwhiskerRightIso₁ (M : TwoMonoidalStructures C) {X₁ X₂ : C} (Y : C) (f : X₁ ≅ X₂) : X₁ ⊗₁[M] Y ≅ X₂ ⊗₁[M] Y := by
+  letI : MonoidalCategory C := M.tensor₁
+  exact f ▷ᵢ Y
+
+abbrev tensorwhiskerLeftIso₂ (M : TwoMonoidalStructures C) (X : C) {Y₁ Y₂ : C} (f : Y₁ ≅ Y₂) : X ⊗₂[M] Y₁ ≅ X ⊗₂[M] Y₂ := by
+  letI : MonoidalCategory C := M.tensor₂
+  exact X ◁ᵢ f
+
+abbrev tensorwhiskerRightIso₂ (M : TwoMonoidalStructures C) {X₁ X₂ : C} (Y : C) (f : X₁ ≅ X₂) : X₁ ⊗₂[M] Y ≅ X₂ ⊗₂[M] Y := by
+  letI : MonoidalCategory C := M.tensor₂
+  exact f ▷ᵢ Y
+
 end TwoMonoidalStructures
 
 end CategoryTheory

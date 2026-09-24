@@ -13,10 +13,10 @@ scoped notation:70 X:71 " ⊗[" M "] " Y:71 =>
 scoped notation:70 X:71 " ⅋[" M "] " Y:71 =>
   TwoMonoidalStructures.tensorObj₂ M X Y
 
-scoped notation:71 " 𝟙⊗[" M "] " =>
+scoped notation:max " 𝟙⊗[" M "] " =>
   TwoMonoidalStructures.tensorUnit₁ M
 
-scoped notation:71 " 𝟙⅋[" M "] " =>
+scoped notation:max " 𝟙⅋[" M "] " =>
   TwoMonoidalStructures.tensorUnit₂ M
 
 scoped notation:70 f:71 " ⊗ₘ[" M "] " g:70 =>
@@ -42,6 +42,18 @@ scoped notation:81 X:71 "◁⅋[" M "]" f:70 =>
 
 scoped notation:81 f:71 "▷⅋[" M "]" Y:70 =>
   TwoMonoidalStructures.tensorwhiskerRight₂ M Y f
+
+scoped notation:81 X:71 "◁⊗ᵢ[" M "]" f:70 =>
+  TwoMonoidalStructures.tensorwhiskerLeftIso₁ M X f
+
+scoped notation:81 f:71 "▷⊗ᵢ[" M "]" Y:70 =>
+  TwoMonoidalStructures.tensorwhiskerRightIso₁ M Y f
+
+scoped notation:81 X:71 "◁⅋ᵢ[" M "]" f:70 =>
+  TwoMonoidalStructures.tensorwhiskerLeftIso₂ M X f
+
+scoped notation:81 f:71 "▷⅋ᵢ[" M "]" Y:70 =>
+  TwoMonoidalStructures.tensorwhiskerRightIso₂ M Y f
 
 scoped notation "ρ⊗[" M "]" =>
   TwoMonoidalStructures.tensorrightUnitor₁ M
