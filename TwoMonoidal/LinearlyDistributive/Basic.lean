@@ -152,4 +152,40 @@ class MixCategory (C : Type u) [Category.{v} C] (M : TwoMonoidalStructures C) ex
   mixator : 𝟙⅋[M] ⟶ 𝟙⊗[M]
   octagon : ∀ X Y : C, (X ◁⊗[M] (λ⅋[M] Y).inv) ≫ (X ◁⊗[M] (mixator ▷⅋[M] Y)) ≫ (δₗ[M] X (𝟙⊗[M]) Y) ≫ ((ρ⊗[M] X).hom ▷⅋[M] Y) = ((ρ⅋[M] X).inv ▷⊗[M] Y) ≫ ((X ◁⅋[M] mixator) ▷⊗[M] Y) ≫ (δᵣ[M] X (𝟙⊗[M]) Y) ≫ (X ◁⅋[M] (λ⊗[M] Y).hom)
 
+open MonoidalCategory
+namespace LinDistCategory
+
+variable (C : Type u) [Category.{v} C] (M : TwoMonoidalStructures C) [LinDistCategory C M]
+
+@[reassoc]
+theorem leftDist_naturality_left {X₁ Y₁ : C} (f : X₁ ⟶ Y₁) (X₂ X₃ : C) :
+  (f ▷⊗[M] (X₂ ⅋[M] X₃)) ≫ (δₗ[M] Y₁ X₂ X₃) = (δₗ[M] X₁ X₂ X₃) ≫ (f ▷⊗[M] X₂) ▷⅋[M] X₃ := by
+    simp [← tensorHom_id, ← leftDist_naturality]
+
+@[reassoc]
+theorem leftDist_naturality_middle {X₂ Y₂ : C} (f : X₂ ⟶ Y₂) (X₁ X₃ : C) :
+  (X₁ ◁⊗[M] (f ▷⅋[M] X₃)) ≫ (δₗ[M] X₁ Y₂ X₃) = (δₗ[M] X₁ X₂ X₃) ≫ (X₁ ◁⊗[M] f) ▷⅋[M] X₃ := by
+    simp [← tensorHom_id, ← id_tensorHom, ← leftDist_naturality]
+
+@[reassoc]
+theorem leftDist_naturality_right {X₃ Y₃ : C} (f : X₃ ⟶ Y₃) (X₁ X₂ : C) :
+  (X₁ ◁⊗[M] (X₂ ◁⅋[M] f)) ≫ (δₗ[M] X₁ X₂ Y₃) = (δₗ[M] X₁ X₂ X₃) ≫ (X₁ ⊗[M] X₂) ◁⅋[M] f := by
+    simp [← id_tensorHom, leftDist_naturality]
+
+@[reassoc]
+theorem rightDist_naturality_left {X₁ Y₁ : C} (f : X₁ ⟶ Y₁) (X₂ X₃ : C) :
+  ((f ▷⅋[M] X₂) ▷⊗[M] X₃) ≫ (δᵣ[M] Y₁ X₂ X₃) = (δᵣ[M] X₁ X₂ X₃) ≫ (f ▷⅋[M] (X₂ ⊗[M] X₃)) := by
+    simp [← tensorHom_id, rightDist_naturality]
+
+@[reassoc]
+theorem rightDist_naturality_middle {X₂ Y₂ : C} (f : X₂ ⟶ Y₂) (X₁ X₃ : C) :
+  ((X₁ ◁⅋[M] f) ▷⊗[M] X₃) ≫ (δᵣ[M] X₁ Y₂ X₃) = (δᵣ[M] X₁ X₂ X₃) ≫ (X₁ ◁⅋[M] (f ▷⊗[M] X₃)) := by
+    simp [← tensorHom_id, ← id_tensorHom, ← rightDist_naturality]
+
+@[reassoc]
+theorem rightDist_naturality_right {X₃ Y₃ : C} (f : X₃ ⟶ Y₃) (X₁ X₂ : C) :
+  ((X₁ ⅋[M] X₂) ◁⊗[M] f) ≫ (δᵣ[M] X₁ X₂ Y₃) = (δᵣ[M] X₁ X₂ X₃) ≫ (X₁ ◁⅋[M] (X₂ ◁⊗[M] f)) := by
+    simp [← id_tensorHom, ← rightDist_naturality]
+
+end LinDistCategory
 end CategoryTheory
